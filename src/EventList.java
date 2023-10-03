@@ -7,43 +7,79 @@
  *
  * @author danah
  */
+
 public class EventList {
     private Node<Event> current;
     private Node<Event> head;
     
-    public void AddEvent(Event e){
+    
+    //classic linked list methods
+    public boolean empty () {
+        return head == null;
+    }
+    public boolean last () {
+        return current.getNext() == null;
+    }
+    public boolean full () {
+            return false;
+    }
+    public void findFirst () {
+            current = head;
+    }
+    public void findNext () {
+            current = current.getNext();
+    }
+    public Event retrieve () {
+            return current.getData();
+    }
+    public void update (Event newData) {
+            current.setData(newData); 
+    } 
+    
+    
+
+    
+    
+    
+    //adding to a list of events
+    public void addEvent(Event e){ //this method is not invoked directly in main we still have to check
         current=head;
         Node<Event> newEvent=new Node<Event>(e);
         if(head==null){
             head=newEvent;
             current=newEvent;
-            return;
+            System.out.println("The Event has been schedled succesfully! ");
+
+            
         }
-        else{
-            if(head.getData().compareTo(newEvent.getData())<0){
-                newEvent.setNext(head);
-                current=head=newEvent;
-                return;
+        else{ //not empty
+            Node<Event> prev = null;
+            current=head;
+            while(current!= null && current.getData().compareTo(e)<0){
+                prev=current;
+                current= current.getNext(); //traversing  
             }
-            Node<Event> prev = head;
-            Node<Event> ahead= head;
-            while(current.getNext()!=null)
-                if(ahead.getData().compareTo(e)>0){
-                    prev=ahead;
-                    ahead=ahead.getNext();
-                }
-            newEvent.setNext(ahead);
+            if(prev==null){
+                newEvent.setNext(current);
+                current=newEvent;
+                System.out.println("The Event has been added succesfully! ");
+                return;
+            }//added first
+            newEvent.setNext(current);
             prev.setNext(newEvent);
             current=newEvent;
-        }
+            System.out.println("The Event has been added succesfully! ");
+        }//end else
         
     }
-    public Event Search(String str,int criteria){
+    public Event searchEvent(String str,int criteria){ //the search for an event is based on the event title or contact name
         current=head;
         while(current!=null) {
 	   switch(criteria) {
 	        case 1 :
-		    if(current.getData().getContactName().equalsIgnoreCase(str))
+                    Contact[] contacts=current.getData().getContacts();
+                    for(int i=0;i<current.getData().getNumOfContacts();i++)
+		    if(contacts[i].getName().equalsIgnoreCase(str))
                         return current.getData();
                     current=current.getNext();    
 		break;
@@ -68,8 +104,10 @@ public class EventList {
         
     public void printEvents(){
        for(current=head;current!=null;current=current.getNext()){
-           current.getData().display();
+           current.getData().display(); //they are added in a sorted manner already so printing is straight forward
        }
+       if(current!=null)
+           current.getData().display();
     }
     
     public void deletEvent(Event e){
@@ -81,33 +119,27 @@ public class EventList {
         while(current!=null){
             if(current.getData().compareTo(e)==0){
                 previous.setNext(current.getNext());
-                current=current.getNext();
-                return;
-            }
-            previous=current;
+                current=head;//to not leave current at null
+                return;}
             current=current.getNext();
-        }
-    }
-
-    public Node<Event> getCurrent() {
-        return current;
-    }
-
-    public void setCurrent(Node<Event> current) {
-        this.current = current;
-    }
-
-    public Node<Event> getHead() {
-        return head;
-    }
-
-    public void setHead(Node<Event> head) {
-        this.head = head;
-    }
-
-    @Override
-    public String toString() {
-        return "EventList{" + "current=" + current + ", head=" + head + '}';
-    }
+        }        
+               
+            }
     
-}
+    public void deletcontact(String name){
+        current=head;
+        Node <Event> previous=null;
+        while(current!=null){
+            current.getData().deletContact(name);
+            current=current.getNext();
+            }
+    }
+        
+    
+    }
+
+     //if(current.getData().compareTo(e)==0){
+             //   previous.setNext(current.getNext());
+              //  current=current.getNext();      
+
+

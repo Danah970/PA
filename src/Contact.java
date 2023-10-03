@@ -7,14 +7,18 @@
  *
  * @author danah
  */
-public class Contact implements Comparable<Contact>{
+//This class will represent a single contact in the phonebook
+
+public class Contact implements Comparable<Contact>{// references below: 
+//http://www.javapractices.com/topic/TopicAction.do?Id=10 
+//https://www.baeldung.com/java-compareto 
 private String name;
 private String phoneNumber;
 private String email;
 private String address;
 private String birthday;
 private String notes;
-private EventList Elist= new EventList();
+private EventList elist;
 
 
     public Contact(String name, String phoneNumber, String email, String address, String birthday, String notes) {
@@ -24,105 +28,118 @@ private EventList Elist= new EventList();
         this.address = address;
         this.birthday = birthday;
         this.notes = notes;
+        this.elist= new EventList();
+    } /*adding a default empty contact constructor like:
+       public Contact() {
+        this.name = "";
+        this.phonenumber = "";
+        this.emailaddress = "";
+        this.address = "";
+        this.birthday = null;
+        this.notes = "";
+        elist= new LinkedList<Event>();
     }
+    is in "theory" a good practice but it simply does NOt make sense IRL
+    */
+    
+    
+    //getters
 
-    public String getName() {
+    public String getName(){
         return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getBirthday() {
         return birthday;
+    }
+
+    public String getNotes() {
+        return notes;
+    }   
+
+     public EventList getElist() {
+        return elist;
+    }
+     
+    //setters
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
-    public String getNotes() {
-        return notes;
-    }
-
     public void setNotes(String notes) {
         this.notes = notes;
     }
-
     
-    
-    public void dispaly(){
-    System.out.println("Name: "+name) ; 
-    System.out.println("Phone Number: "+phoneNumber) ;   
-    System.out.println("Email Address: "+email) ;   
-    System.out.println("Address: "+address) ;   
-    System.out.println("Birthday: "+birthday) ;   
-
+    //printing a contact's details
+    public void display() {
+        System.out.println("Name: "+name) ;
+        System.out.println("Phone Number: "+phoneNumber) ;
+        System.out.println("Email Address: "+email) ;
+        System.out.println("Address: "+address) ;
+        System.out.println("Birthday: "+birthday) ;
     }
    
-    public int compareTo(Contact c) {
-    String str1=this.name.toLowerCase();
-    String str2=c.name.toLowerCase();
-    int n1=str1.length();
-    int n2=str2.length();
-    int min=Math.min(n1, n2);
-     for(int i=0;i<min;i++){
-         if(str1.charAt(i)<str2.charAt(i))
-             return 1;
-         else if(str1.charAt(i)>str2.charAt(i))
-                 return -1;
-     }
-     if(n1<n2)
-         return -1;
-     else if(n1>n2)
-         return 1;
-     return 0;
+@Override
+    public int compareTo(Contact c)
+    {
+        
+    return this.name.toLowerCase().compareTo(c.name.toLowerCase());
     }
-    public int compareTo(String num) {
+    
+    public int compareTo(String num) 
+    { //we will use it to ensure unique number
      int num1=Integer.parseInt(this.phoneNumber);
-     int num2=Integer.parseInt(num);
+     int num2=Integer.parseInt(num); //the user is required to enter a correct phonenumber
      return num1-num2;
     }
     
-    public boolean AddEvent(Event e){
-        Event event=Elist.Search(e.getDate().concat(e.getTime()),3);
+    public boolean checkEvent(Event e){
+        Event event=elist.searchEvent(e.getDate().concat(e.getTime()),3);
+        /*There should be no conflict in event scheduling. A new event should not be scheduled for a contact if
+it has a conflict with a current scheduled event.*/
         if(event!=null){
-            System.out.println("there is a conflict with "+event.getTitle());
+            System.out.println(name+" has a conflict with "+event.getTitle());
             return false;
         }
-        Elist.AddEvent(e);
-        System.out.println("Event scheduled successfully!");
+        elist.addEvent(e);
+  
         return true;
     }
+    
+    
+    
 
-    public EventList getElist() {
-        return Elist;
-    }
+   
 
    
 

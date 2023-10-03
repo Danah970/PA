@@ -7,78 +7,112 @@
  *
  * @author danah
  */
-public class Event {
-    private String Title,Date,Time,Location,ContactName;
-    
 
-    public Event(String Title, String Date, String Time, String Location, String ContactName) {
-        this.Title = Title;
-        this.Date = Date;
-        this.Time = Time;
-        this.Location = Location;
-        this.ContactName = ContactName;
+//This class will represent events or appointment that can be scheduled with a contact
+public class Event implements Comparable<Event> {
+    private String title;
+    private String date;
+    private String time;
+    private String location; 
+    private Contact[] contacts;
+    private int numOfContacts;
+
+    public Event(String title, String date, String time, String location, Contact[] contacts, int numOfContacts) {
+        this.title = title;
+        this.date = date;
+        this.time = time;
+        this.location = location;
+        this.contacts = contacts;
+        this.numOfContacts = numOfContacts;
     }
 
-    public String getTitle() {
-        return Title;
+    /* Same as the contact class adding a default empty contact constructor like:
+      public Event() {
+        this.title = "";
+        this.date = null;
+        this.time = "";
+        this.location = "";
+        this.contactsname = "";
     }
+    is in "theory" a good practice but it simply does NOt make sense IRL
+    */
     
-    public int compareTo(Event e){
-        String str1=this.Title.toLowerCase();
-        String str2=e.getTitle().toLowerCase();
-        int n1=str1.length();
-        int n2=str2.length();
-        int min=Math.min(n1, n2);
-        for(int i=0;i<min;i++){
-         if(str1.charAt(i)<str2.charAt(i))
-             return 1;
-         else if(str1.charAt(i)>str2.charAt(i))
-             return -1;
-        }
-        if(n1<n2)
-          return -1;
-        else if(n1>n2)
-          return 1;
-        return 0;
+    //getters
+    public String getTitle(){
+        return title;
     
         }
 
     public String getDate() {
-        return Date;
-    }
-
-    public void setDate(String Date) {
-        this.Date = Date;
+        return date;
     }
 
     public String getTime() {
-        return Time;
-    }
-
-    public void setTime(String Time) {
-        this.Time = Time;
+        return time;
     }
 
     public String getLocation() {
-        return Location;
-    }
-
-    public void setLocation(String Location) {
-        this.Location = Location;
-    }
-
-    public String getContactName() {
-        return ContactName;
-    }
-
-    public void setContactName(String ContactName) {
-        this.ContactName = ContactName;
+        return location;
     }
     
+    // setters
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int compareTo(Event e) 
+    {
+    return this.title.toLowerCase().compareTo(e.title.toLowerCase());
+ 
+    }
+
+    
     public void display(){
-    System.out.println("Event title: "+Title) ; 
-    System.out.println("Contact name: "+ContactName) ;   
-    System.out.println("Event date and time (MM/DD/YYYY HH:MM): "+Date+" "+Time) ;   
-    System.out.println("Event location: "+Location) ;     
+    System.out.println("Event title: "+title) ; 
+    System.out.print("Contact name: ") ;
+    for(int i=0;i<numOfContacts;i++)
+        System.out.print(contacts[i].getName()+", ");
+    System.out.println("\n Event date and time (MM/DD/YYYY HH:MM): "+date+" "+time) ;   
+    System.out.println("Event location: "+location) ;     
+    }
+
+    public Contact[] getContacts() {
+        return contacts;
+    }
+
+    public int getNumOfContacts() {
+        return numOfContacts;
+    }
+    
+    public boolean deletContact(String contactname){//check if event have no contact linked to
+        if(!contacts[numOfContacts-1].getName().equalsIgnoreCase(contactname)){
+            for(int i=0;i<numOfContacts-1;i++){
+                if(contacts[i].getName().equalsIgnoreCase(contactname)){
+                    contacts[i]=contacts[numOfContacts-1];
+                    contacts[--numOfContacts]=null;
+                }
+            }
+        }
+        else{
+            contacts[--numOfContacts]=null;
+        }
+        if(numOfContacts==0)
+            return true;
+        return false;//there is contact(s) 
+            
+        
     }
 }
+
