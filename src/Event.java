@@ -16,14 +16,15 @@ public class Event implements Comparable<Event> {
     private String location; 
     private Contact[] contacts;
     private int numOfContacts;
-
-    public Event(String title, String date, String time, String location, Contact[] contacts, int numOfContacts) {
+    private int index;
+    public Event(String title, String date, String time, String location, int numOfContacts) {
         this.title = title;
         this.date = date;
         this.time = time;
         this.location = location;
-        this.contacts = contacts;
         this.numOfContacts = numOfContacts;
+        contacts=new Contact[numOfContacts];
+        this.index=0;
     }
 
     /* Same as the contact class adding a default empty contact constructor like:
@@ -112,7 +113,9 @@ public class Event implements Comparable<Event> {
             return true;
         return false;//there is contact(s) 
             
-        
+    }
+    public void addcontact(Contact c){
+        contacts[index++]=c;
     }
 }
 

@@ -48,7 +48,7 @@ public class EventList {
         if(head==null){
             head=newEvent;
             current=newEvent;
-            System.out.println("The Event has been schedled succesfully! ");
+            System.out.println("The Event has been schedled succesfully!1 ");
 
             
         }
@@ -62,13 +62,13 @@ public class EventList {
             if(prev==null){
                 newEvent.setNext(current);
                 current=newEvent;
-                System.out.println("The Event has been added succesfully! ");
+                System.out.println("The Event has been added succesfully!2 ");
                 return;
             }//added first
             newEvent.setNext(current);
             prev.setNext(newEvent);
             current=newEvent;
-            System.out.println("The Event has been added succesfully! ");
+            System.out.println("The Event has been added succesfully!3 ");
         }//end else
         
     }
@@ -103,11 +103,16 @@ public class EventList {
 	}
         
     public void printEvents(){
-       for(current=head;current!=null;current=current.getNext()){
-           current.getData().display(); //they are added in a sorted manner already so printing is straight forward
-       }
-       if(current!=null)
-           current.getData().display();
+       //for(current=head;current!=null;current=current.getNext()){
+         //  current.getData().display(); //they are added in a sorted manner already so printing is straight forward
+       
+      // if(current!=null)
+          // current.getData().display();
+        current=head;
+        while(current!=null){
+            current.getData().display();
+            current=current.getNext();
+        }
     }
     
     public void deletEvent(Event e){

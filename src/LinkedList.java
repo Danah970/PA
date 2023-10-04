@@ -226,8 +226,10 @@ contacts that share the first name.*/
 public boolean addEventToaContact(Contact contact,Event e){
     current=head;
     while(current!=null) { //Make sure before adding an event that the contact in the event exist in the contact list
-        if(current.getData().getName().equalsIgnoreCase(contact.getName())) //if contact exists
-            return current.getData().checkEvent(e);//check if there is conflict
+        if(current.getData().getName().equalsIgnoreCase(contact.getName())){ //if contact exists
+            current.getData().checkEvent(e);//check if there is conflict
+            return true;
+        }
         
         current=current.getNext(); //move current
     }
