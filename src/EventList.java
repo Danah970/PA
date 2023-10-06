@@ -1,12 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author danah
- */
 
 public class EventList {
     private Node<Event> current;
@@ -42,55 +33,48 @@ public class EventList {
     
     
     //adding to a list of events
-    public void addEvent(Event e){ //this method is not invoked directly in main we still have to check
+    public boolean addEvent(Event e){ //this method is not invoked directly in main we still have to check
         current=head;
         Node<Event> newEvent=new Node<Event>(e);
-        if(head==null){
+        if (head == null || head.getData().compareTo(e)>= 0) {
+            newEvent.setNext(head);
             head=newEvent;
             current=newEvent;
-            System.out.println("The Event has been schedled succesfully!1 ");
+            return true;
 
             
         }
         else{ //not empty
             Node<Event> prev = null;
             current=head;
-            while(current!= null && current.getData().compareTo(e)<0){
-                prev=current;
+            while(current.getNext() != null && current.getNext().getData().compareTo(newEvent.getData()) < 0) {
                 current= current.getNext(); //traversing  
             }
-            if(prev==null){
-                newEvent.setNext(current);
-                current=newEvent;
-                System.out.println("The Event has been added succesfully!2 ");
-                return;
-            }//added first
-            newEvent.setNext(current);
-            prev.setNext(newEvent);
-            current=newEvent;
-            System.out.println("The Event has been added succesfully!3 ");
+            newEvent.setNext(current.getNext());
+            current.setNext(newEvent);
+                return true;
         }//end else
         
     }
-    public Event searchEvent(String str,int criteria){ //the search for an event is based on the event title or contact name
+    public Event searchEvent(String str,int criteria){ //the search for an event is based on contact name or the event title and it updates the current to point at the node we were looking for
         current=head;
         while(current!=null) {
 	   switch(criteria) {
-	        case 1 :
+	        case 1 : //search based on contact name
                     Contact[] contacts=current.getData().getContacts();
                     for(int i=0;i<current.getData().getNumOfContacts();i++)
 		    if(contacts[i].getName().equalsIgnoreCase(str))
-                        return current.getData();
+                       return current.getData();
                     current=current.getNext();    
 		break;
                 
-	        case 2 :
+	        case 2 : //search based on event title
 		    if(current.getData().getTitle().equalsIgnoreCase(str))
                         return current.getData();
                     current=current.getNext();    
 		break;
                 
-	        case 3 :
+	        case 3 : //search based on date and time to ensure uniqueness
 		    if(current.getData().getDate().concat(current.getData().getTime()).equalsIgnoreCase(str))
 			return current.getData();
                     current=current.getNext();  
@@ -146,5 +130,6 @@ public class EventList {
      //if(current.getData().compareTo(e)==0){
              //   previous.setNext(current.getNext());
               //  current=current.getNext();      
+
 
 

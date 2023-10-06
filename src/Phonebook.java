@@ -1,12 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 
-/**
- *
- * @author danah
- */
 //This class will represent the phonebook application itself
 import java.util.*;
 public class Phonebook {
@@ -48,14 +40,15 @@ contacts." b "fields" we assumed this was part of the main method interaction*/
     
     
     
-    //print contacts that share an event
-public static void printIfSharedEvent(String eventTitle){
- clist.findFirst();
- for( int i =0; i< clist.getNumC() ; i++){
-     if(clist.retrieve().getElist().searchEvent(eventTitle, 1)!=null)
-         clist.retrieve().display();
- clist.findNext();
+   //print contacts that share an event
+    public static void printIfSharedEvent(String eventTitle){
+        clist.findFirst();
+        for( int i =0; i< clist.getNumC() ; i++){
+            if(clist.retrieve().getElist().searchEvent(eventTitle, 2)!=null)
+              clist.retrieve().display();
+            clist.findNext();
  }
+
 }
     
 public static void main(String args[]) {
@@ -74,12 +67,21 @@ do {
 	System.out.println("6. Print contacts by first name");
 	System.out.println("7. Print all events alphabetically");
         System.out.println("8. Print all contacts that share an event");
-	System.out.println("9. Exit\n");
+        System.out.println("9. add new contact(s) to a pre-schedualed event");
+	System.out.println("10. Exit\n");
 	System.out.print("Enter your choice:");
 	choice= input.nextInt();
         input.nextLine();
         boolean check;
 switch(choice) {
+   
+    
+    
+    
+    
+    
+    
+    
     case 1://Add a contact
       input.nextLine();
       System.out.print("Enter the contact's name: ");
@@ -93,17 +95,22 @@ switch(choice) {
               System.out.println("invalid phone number");
               check=true;
       }//end if
-      }while(check);
+      }while(check); //end number validation
+      
+      
+      
       String email;
       do{
             check=false;
             System.out.print("Enter the contact's email address: ");
             email= input.nextLine();
-            if(email.indexOf("@")==-1){
-                System.out.println("invalid phone number");
+            if(email.indexOf("@")==-1){ //no @
+                System.out.println("invalid email address");
                 check=true;
             }//end if
-      }while(check);
+      }while(check);// end email validation
+      
+      
       System.out.print("Enter the contact's address: ");
       String address= input.nextLine();
       System.out.print("Enter the contact's birthday: ");
@@ -116,6 +123,12 @@ switch(choice) {
       else
           System.out.println("Contact is not added because it's NOT unique");
       break; 
+    
+    
+    
+    
+    
+    
     case 2://Search for a contact
         input.nextLine();
         System.out.println("Enter search criteria:");
@@ -136,11 +149,11 @@ switch(choice) {
                 input.nextLine();
                 System.out.print("Enter The contact's name: ");
                 str=input.nextLine();;
-                c=clist.SearchContact(str, criteria);
+                c=clist.searchContactByNameOrNumber(str, criteria); // returns list of contacts
                 if(c!=null){
                     System.out.print("Contact found!\n");
                     c.display();
-                }
+                } 
                 else
                     System.out.println("Contact doesn't exist");
                 break;
@@ -148,13 +161,13 @@ switch(choice) {
                 input.nextLine();
                 System.out.print("Enter The contact's number: ");
                 str=input.nextLine();
-                c=clist.SearchContact(str, criteria);
+                c=clist.searchContactByNameOrNumber(str, criteria);
                 if(c!=null){
                     System.out.print("Contact found!\n");
                     c.display();
                 }
                 else
-                System.out.println("Contact doesn't exist");
+                    System.out.println("Contact doesn't exist");
                 break;
             case 3://by Email Address
                 System.out.print("Enter The contact's email: ");
@@ -171,34 +184,71 @@ switch(choice) {
                 str=input.nextLine();    
                 contacts=clist.searchContacts(str, criteria);
                 break;
-            default:
+            /*default:
                 System.out.println("invalid number!");
-                break;
+                break;*/
                 }
                 if(contacts!=null){
+                    System.out.println("Contact(s) found!");
                     for(int i=0;i<contacts.length;i++)
-                        contacts[i].display();
+                        if(contacts[i]!=null)
+                            contacts[i].display();
                 }
                 else if(contacts==null&&criteria!=1&&criteria!=2)
                 System.out.println("Contact(s) doesn't exist");
          break;
+         
+         
+         
+         
+         
+         
     case 3://Delete a contact
         input.nextLine();
         System.out.println("Enter Contact Name:");
         String Name= input.nextLine();
-        EventList events=clist.deletContact(Name);//return all events in contact
-        if(events!=null){//deleted contact has event(s)
-            events.deletcontact(Name);//delet contact for all events tha
-            Elist.findFirst();
-            while(!Elist.last()){
-                if(Elist.retrieve().getNumOfContacts()==0)//
-                    Elist.deletEvent(Elist.retrieve());//delet the event 
-                Elist.findNext();    
+        EventList events=clist.deletContact(Name);//return all events in contact that we want to delete
+        Elist.findFirst();
+        events.findFirst();
+        Contact[] con=null;
+        Event toBeDeletedEvent=null;
+        if(events!=null){//deleted contact has an eventlist
+            while(!events.last()){
+            if(events.retrieve().getContacts().length==1)//meaning we deleted the only contact this event is associated with so it should be deleted
+                Elist.deletEvent(events.retrieve());
+            else{
+                con=events.retrieve().getContacts();
+            
+                for(int i=0; i< con.length; i++) 
+                    if(con[i].getName().equalsIgnoreCase(Name)){
+                        toBeDeletedEvent=Elist.searchEvent(events.retrieve().getTitle(), 1);//step *
+                        toBeDeletedEvent.deletContact(Name);
+                        Elist.update(toBeDeletedEvent);//current is already at right place from step(*)
+                        i=con.length; }//so it would exit if
             }
-            if(Elist.retrieve().getNumOfContacts()==0)
-                Elist.deletEvent(Elist.retrieve());
+                events.findNext();
+            
+            
+        }//end while
         }
+            //we will check last element in events
+            if(events.retrieve().getContacts().length==1)//meaning we deleted the only contact this event is associated with so it should be deleted
+                Elist.deletEvent(events.retrieve());
+            else{
+                con=events.retrieve().getContacts();
+            
+                for(int i=0; i< con.length; i++) 
+                    if(con[i].getName().equalsIgnoreCase(Name)){
+                        toBeDeletedEvent=Elist.searchEvent(events.retrieve().getTitle(), 1);//step *
+                        toBeDeletedEvent.deletContact(Name);
+                        Elist.update(toBeDeletedEvent);//current is already at right place from step(*)
+                        i=con.length; }}//so it would exit if
         break;
+    
+    
+    
+    
+    
     case 4://Schedule an event
         input.nextLine();
         System.out.print("Enter event title:");
@@ -213,37 +263,45 @@ switch(choice) {
                 System.out.println("invalid input");
                 check=true;
             }
-        }while(check);
-        Contact[] Contacts=new Contact[numOfContacts];
+        }while(check); //validate number
+        
+        
+        
+        Contact[] Contacts = new Contact[numOfContacts];
         int index=0;
         Contact contact;
         for(int i=0;i<numOfContacts;i++){
             do{
                 input.nextLine();
-                System.out.print("Enter contact name:");
+                System.out.print("Enter contact's number "+ (i+1)+" name:");
                 String contactname= input.nextLine();
-                contact=clist.SearchContact(contactname, 1);//check if contact exist
+                contact=clist.searchContactByNameOrNumber(contactname, 1);//check if contact exist
                 if(contact!=null)
                     Contacts[index++]=contact;
+                else
+                    System.out.print("You entered a name that does not exist, try again");
             }while(contact==null);     
         }
-        String Date,time;
+        String date,time;
         do{
             check=false;
             System.out.print("Enter event date and time (MM/DD/YYYY HH:MM):");
-            Date= input.next();
+            date= input.next();
             time=input.next();
-            if(Date.charAt(2)=='/'||Date.charAt(5)=='/'||time.charAt(2)==':'){
+            if(date.charAt(2)!='/'||date.charAt(5)!='/'||time.charAt(2)!=':'){
                 System.out.println("invalid date and time");
                 check=true;
             }//end if
         }while(check);
         System.out.print("Enter event location:");
+        input.nextLine();
         String location= input.nextLine();
         boolean flag=false;
-        Event e=new Event(title,Date,time,location,numOfContacts);
+        Event e=new Event(title,date,time,location,numOfContacts);
+        clist.findFirst();
         for(int i=0;i<numOfContacts;i++){//add event to each contact
             if(clist.addEventToaContact(Contacts[i],e)){//no conflict
+                System.out.println("The Event with "+Contacts[i].getName()+" has been schedled succesfully! ");
                 e.addcontact(Contacts[i]);
                 flag=true;  
             }
@@ -251,6 +309,11 @@ switch(choice) {
         if(flag)
             Elist.addEvent(e);
         break;
+  
+    
+    
+    
+    
     case 5://Print event details
         input.nextLine();
         System.out.println("Enter search criteria:");
@@ -282,32 +345,106 @@ switch(choice) {
             System.out.print("Event found!\n");
             event.display();}
         break;    
+    
+    
+    
+    
     case 6://Print contacts by first name
        input.nextLine();
        PrintContactsFirstName();
-       //System.out.print("Enter the first name: ");
-       //String fname=input.nextLine();
-      // clist.printFirstName(fname);
+      
+       
+       /*another way: (beacause we have memeber implemetation of the method)
+       System.out.println("Enter the first name: ");
+       String fname=input.nextLine();
+       clist.printFirstName(fname);*/
         break;
-    case 7://Print all events alphabetically
+   
+    
+    
+    
+    case 7://Print all events alphabetically (directly because it was added sorted)
         Elist.printEvents();
         break;
-    case 8://Print all contacts that share an event
+   
+    
+    
+    
+    
+    case 8://Print all contacts that share an event 
         System.out.println("Enter event title: ");
         String eventtitle=input.nextLine();
-        Event ev=Elist.searchEvent(eventtitle, 2);
+        Event ev=Elist.searchEvent(eventtitle, 2); //2 to search based on event title 
         Contact[] Cont=ev.getContacts();
         for(int i=0;i<ev.getNumOfContacts();i++)
             Cont[i].display();
         break;
-    case 9://Exit
+   
+    
+    
+    
+   
+    
+    
+    case 9://add new contact(s) to a pre-schedualed event
+        input.nextLine();
+        int extra=0;
+        boolean flag_=false;
+        System.out.print("what's the event title? ");
+        String titleOfEvent= input.nextLine();
+        Event alteredEvent= Elist.searchEvent(titleOfEvent, 2);
+         do{
+            check=false;
+            try{
+            System.out.print("how many contacts you want to add to a pre-scheduled event? ");
+            extra=input.nextInt();
+            }catch(InputMismatchException e2){
+                check=true;
+                System.out.println("invalid input");
+            }
+        }while(check);
+         Elist.deletEvent(alteredEvent);
+         Contact[] updatedContacts = new Contact[alteredEvent.getNumOfContacts()+extra];
+         for(int i=0;i<alteredEvent.getNumOfContacts();i++)
+             updatedContacts[i] = alteredEvent.getContacts()[i]; //copy previous
+        int indexing=alteredEvent.getNumOfContacts()-1;
+        Contact contact_;
+        for(int i=0;i<extra;i++){
+            do{
+                input.nextLine();
+                System.out.print("Enter contact name:");
+                String contactname= input.nextLine();
+                contact=clist.searchContactByNameOrNumber(contactname, 1);//check if contact exist
+                if(contact!=null)
+                    updatedContacts[indexing++]=contact;
+            }while(contact==null);     
+        }
+         alteredEvent=new Event(titleOfEvent,alteredEvent.getDate(),alteredEvent.getTime(),alteredEvent.getLocation(),alteredEvent.getNumOfContacts()+extra);
+        clist.findFirst();
+        for(int i=0;i<alteredEvent.getNumOfContacts()+extra;i++){//add event to each contact
+            if(clist.addEventToaContact(updatedContacts[i],alteredEvent)){//no conflict
+                alteredEvent.addcontact(updatedContacts[i]);
+                flag_=true;  
+            }
+        }
+        if(flag_)
+            Elist.addEvent(alteredEvent);
+        break;
+        
+        
+        
+        
+        
+        case 10://Exit
         input.nextLine();
         System.out.print("Goodbye!");
         break;
     default: 
         System.out.println("invalid choice, try again!");
 }
-}while(choice!=9);
+}while(choice!=10);
 }}
+
+
 
 

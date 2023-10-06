@@ -1,12 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author danah
- */
 
 //This class will represent events or appointment that can be scheduled with a contact
 public class Event implements Comparable<Event> {
@@ -82,9 +73,10 @@ public class Event implements Comparable<Event> {
     
     public void display(){
     System.out.println("Event title: "+title) ; 
-    System.out.print("Contact name: ") ;
+    System.out.print("Contact name(s): ") ;
     for(int i=0;i<numOfContacts;i++)
-        System.out.print(contacts[i].getName()+", ");
+        if(contacts[i]!=null)
+            System.out.print(contacts[i].getName()+", ");
     System.out.println("\n Event date and time (MM/DD/YYYY HH:MM): "+date+" "+time) ;   
     System.out.println("Event location: "+location) ;     
     }
@@ -97,10 +89,10 @@ public class Event implements Comparable<Event> {
         return numOfContacts;
     }
     
-    public boolean deletContact(String contactname){//check if event have no contact linked to
-        if(!contacts[numOfContacts-1].getName().equalsIgnoreCase(contactname)){
+    public boolean deletContact(String contactName){//check if event have no contact linked to
+        if(!contacts[numOfContacts-1].getName().equalsIgnoreCase(contactName)){ //numOfContacts-1 to get the index
             for(int i=0;i<numOfContacts-1;i++){
-                if(contacts[i].getName().equalsIgnoreCase(contactname)){
+                if(contacts[i].getName().equalsIgnoreCase(contactName)){
                     contacts[i]=contacts[numOfContacts-1];
                     contacts[--numOfContacts]=null;
                 }
