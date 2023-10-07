@@ -3,7 +3,6 @@ public class EventList {
     private Node<Event> current;
     private Node<Event> head;
     
-    
     //classic linked list methods
     public boolean empty () {
         return head == null;
@@ -27,11 +26,6 @@ public class EventList {
             current.setData(newData); 
     } 
     
-    
-
-    
-    
-    
     //adding to a list of events
     public boolean addEvent(Event e){ //this method is not invoked directly in main we still have to check
         current=head;
@@ -40,22 +34,23 @@ public class EventList {
             newEvent.setNext(head);
             head=newEvent;
             current=newEvent;
-            return true;
-
-            
-        }
+            return true; 
+        }//end if
         else{ //not empty
             Node<Event> prev = null;
             current=head;
             while(current.getNext() != null && current.getNext().getData().compareTo(newEvent.getData()) < 0) {
                 current= current.getNext(); //traversing  
-            }
+            }//end while
             newEvent.setNext(current.getNext());
             current.setNext(newEvent);
                 return true;
-        }//end else
-        
-    }
+        }//end else  
+    }//end addEvent
+    
+    //-----------------------------------------------------------------------------------------------------
+    
+    
     public Event searchEvent(String str,int criteria){ //the search for an event is based on contact name or the event title and it updates the current to point at the node we were looking for
         current=head;
         while(current!=null) {
@@ -64,72 +59,67 @@ public class EventList {
                     Contact[] contacts=current.getData().getContacts();
                     for(int i=0;i<current.getData().getNumOfContacts();i++)
 		    if(contacts[i].getName().equalsIgnoreCase(str))
-                       return current.getData();
+                        return current.getData();
                     current=current.getNext();    
 		break;
-                
 	        case 2 : //search based on event title
 		    if(current.getData().getTitle().equalsIgnoreCase(str))
                         return current.getData();
                     current=current.getNext();    
 		break;
-                
 	        case 3 : //search based on date and time to ensure uniqueness
 		    if(current.getData().getDate().concat(current.getData().getTime()).equalsIgnoreCase(str))
 			return current.getData();
                     current=current.getNext();  
 		break;
-	       
-	    }
-        }
-	return null;
-			
-	}
+	    }//end switch
+        }//end while
+	return null;		
+    }//end searchEvent
+    
+    //-----------------------------------------------------------------------------------------------------
+    
         
     public void printEvents(){
-       //for(current=head;current!=null;current=current.getNext()){
-         //  current.getData().display(); //they are added in a sorted manner already so printing is straight forward
-       
-      // if(current!=null)
-          // current.getData().display();
         current=head;
         while(current!=null){
             current.getData().display();
-            current=current.getNext();
-        }
-    }
+            current=current.getNext();//move current
+        }//end while
+    }//end printEvents
     
-    public void deletEvent(Event e){
-        if(head.getData().compareTo(e)==0){
+    //-----------------------------------------------------------------------------------------------------
+    
+    
+    public void deletEvent(Event e){//delet event from event list
+        if(head.getData().compareTo(e)==0){//deleted event in front
             head=null;
-            return;}
+            return;
+        }//end if
         current=head.getNext();
         Node <Event> previous=head;
         while(current!=null){
             if(current.getData().compareTo(e)==0){
                 previous.setNext(current.getNext());
                 current=head;//to not leave current at null
-                return;}
+                return;
+            }//end if
             current=current.getNext();
-        }        
-               
-            }
+        }//end while       
+    }//end deletEvent
     
-    public void deletcontact(String name){
+    //-----------------------------------------------------------------------------------------------------
+    
+    
+    public void deletcontact(String name){//delet contact to all the events linked to deleted contact
         current=head;
         Node <Event> previous=null;
         while(current!=null){
-            current.getData().deletContact(name);
-            current=current.getNext();
-            }
-    }
+            current.getData().deletContact(name);//calling delet contact in Event class
+            current=current.getNext();//move current
+        }//end while
+    }//end deletcontact
         
+}//end EventList class
+
     
-    }
-
-     //if(current.getData().compareTo(e)==0){
-             //   previous.setNext(current.getNext());
-              //  current=current.getNext();      
-
-
-
