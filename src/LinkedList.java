@@ -1,10 +1,10 @@
 
-
+//this class represents a list of contacts 
 
 public class LinkedList {
 private Node<Contact> current;
 private Node<Contact> head;
-private int numC;  //number of contacts  
+private int numC;  //number of contacts in the list
     
     //default constructor
     public LinkedList () 
@@ -12,7 +12,8 @@ private int numC;  //number of contacts
         numC = 0;
         head = current = null;
     }
-    
+ //-----------------------------------------------------------------------------------------------------
+   
     //classic linked list methods
     public boolean empty () {
         return head == null;
@@ -66,6 +67,8 @@ private int numC;  //number of contacts
             }//end while
             newContact.setNext(current.getNext());
             current.setNext(newContact);
+             System.out.println("The contact has been added succesfully! ");
+            numC++; //adding to a non-empty list   
         }//end else (adding to a list thats not empty)
     }//end addContact
     
@@ -74,9 +77,9 @@ private int numC;  //number of contacts
     
     public EventList deletContact(String contactName){//deleting from a list
         EventList events;
-        if(head.getData().getName().compareTo(contactName)==0){//deleted contact in front
+        if(head.getData().getName().equalsIgnoreCase(contactName)){//deleted contact in front
+            events=head.getData().getElist();
             head=head.getNext();
-            events=current.getData().getElist();
             current=head;
             System.out.println("The Contact deleted Successfully!");// deleted contact is at the head
             numC--;//decrement number of contacts 
@@ -85,7 +88,7 @@ private int numC;  //number of contacts
         current=head.getNext();
         Node <Contact> previous=head;
         while(current!=null){
-            if(current.getData().getName().compareTo(contactName)==0){
+            if(current.getData().getName().equalsIgnoreCase(contactName)){
                 events=current.getData().getElist();
                 previous.setNext(current.getNext());
                 if(current.getNext()!=null)//last
@@ -149,26 +152,7 @@ private int numC;  //number of contacts
         
         return true;
     }//end checkUniqueContact
-    
-    //-----------------------------------------------------------------------------------------------------
-    
-
-    public void printFirstName(String name){
-        /* we did put another method in phonebook to show user implementation as a user 
-        because it's stated in the requirements that 'The Phonebook class should have methods for printing all contacts that share an event as well as all
-        contacts that share the first name.*/
-        if(this.empty())
-            System.out.println("No Contacts found!");   
-        current=head;
-        for ( int i = 0 ; i < numC; i++){
-            String currentName = current.getData().getName();
-            String[] fName = currentName.split(" ");
-
-            if (fName[0].equalsIgnoreCase(currentName))
-                current.getData().display();
-            current=current.getNext();
-        }//end for
-    }//end printFirstName
+   
     
     //-----------------------------------------------------------------------------------------------------
 

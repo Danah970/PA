@@ -5,7 +5,7 @@ public class Event implements Comparable<Event> {
     private String date;
     private String time;
     private String location; 
-    private Contact[] contacts;//array of contacts in the event
+    private Contact[] contacts;//array of contacts in the event, ex lunch with Ahmed and Khalid
     private int numOfContacts;//number of contacts
     private int index;
     public Event(String title, String date, String time, String location, int numOfContacts) {//constructor
@@ -15,7 +15,7 @@ public class Event implements Comparable<Event> {
         this.location = location;
         this.numOfContacts = numOfContacts;
         contacts=new Contact[numOfContacts];
-        this.index=0;
+        this.index=0; //we will add later at index
     }
 
     /* Same as the contact class adding a default empty contact constructor like:
@@ -55,6 +55,10 @@ public class Event implements Comparable<Event> {
         return numOfContacts;
     }
     
+    
+    //-----------------------------------------------------------------------------------------------------
+
+    
     // setters
     public void setTitle(String title) {
         this.title = title;
@@ -75,6 +79,7 @@ public class Event implements Comparable<Event> {
     //-----------------------------------------------------------------------------------------------------
 
     
+    @Override
     public int compareTo(Event e){ 
         return this.title.toLowerCase().compareTo(e.title.toLowerCase());
     }
@@ -82,14 +87,16 @@ public class Event implements Comparable<Event> {
     //-----------------------------------------------------------------------------------------------------
 
     
-    public void display(){
+    public void display(){ //print event details
         System.out.println("Event title: "+title) ; 
         System.out.print("Contact name(s): ") ;
         for(int i=0;i<numOfContacts;i++)
             if(contacts[i]!=null)
                 System.out.print(contacts[i].getName()+", ");
-        System.out.println("\n Event date and time (MM/DD/YYYY HH:MM): "+date+" "+time) ;   
-        System.out.println("Event location: "+location) ;     
+        System.out.println("\nEvent date and time (MM/DD/YYYY HH:MM): "+date+" "+time) ;   
+        System.out.println("Event location: "+location) ;   
+        System.out.println() ;   
+ 
     }//end display
     
     //-----------------------------------------------------------------------------------------------------
@@ -98,7 +105,7 @@ public class Event implements Comparable<Event> {
     public boolean deletContact(String contactName){//check if event have no contact linked to
         if(!contacts[numOfContacts-1].getName().equalsIgnoreCase(contactName)){ //numOfContacts-1 to get the index
             for(int i=0;i<numOfContacts-1;i++){
-                if(contacts[i].getName().equalsIgnoreCase(contactName)){
+                if(contacts[i].getName().trim().equalsIgnoreCase(contactName.trim())){
                     contacts[i]=contacts[numOfContacts-1];
                     contacts[--numOfContacts]=null;
                 }//end if
@@ -116,7 +123,8 @@ public class Event implements Comparable<Event> {
     
     
     public void addcontact(Contact c){//add contact to the event
-        contacts[index++]=c;
+        contacts[index++]=c; //post increment because we didn't start at -1 but rather at 0 in constructor
     }//end addcontact
 }//end Event class
 
+   //-----------------------------------------------------------------------------------------------------

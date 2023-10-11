@@ -1,4 +1,6 @@
 
+//this class represents a list of events to be stored in a contact as well as in the phonebook app to access all available events
+
 public class EventList {
     private Node<Event> current;
     private Node<Event> head;
@@ -25,18 +27,19 @@ public class EventList {
     public void update (Event newData) {
             current.setData(newData); 
     } 
-    
+    //-----------------------------------------------------------------------------------------------------
+
     //adding to a list of events
     public boolean addEvent(Event e){ //this method is not invoked directly in main we still have to check
         current=head;
         Node<Event> newEvent=new Node<Event>(e);
-        if (head == null || head.getData().compareTo(e)>= 0) {
+        if (head == null || head.getData().compareTo(e)>= 0) { //add at the start of list if it's empty or the object added is meant to be at the start based on title
             newEvent.setNext(head);
             head=newEvent;
             current=newEvent;
             return true; 
         }//end if
-        else{ //not empty
+        else{ //not empty or head isn't supposed to be a successor 
             Node<Event> prev = null;
             current=head;
             while(current.getNext() != null && current.getNext().getData().compareTo(newEvent.getData()) < 0) {
@@ -80,12 +83,15 @@ public class EventList {
     //-----------------------------------------------------------------------------------------------------
     
         
-    public void printEvents(){
+    public boolean printEvents(){
+        boolean flag=false; 
         current=head;
         while(current!=null){
             current.getData().display();
+            flag=true;  //true meaning an event has been printed
             current=current.getNext();//move current
         }//end while
+        return flag;//empty list
     }//end printEvents
     
     //-----------------------------------------------------------------------------------------------------
@@ -93,7 +99,7 @@ public class EventList {
     
     public void deletEvent(Event e){//delet event from event list
         if(head.getData().compareTo(e)==0){//deleted event in front
-            head=null;
+            head=head.getNext();
             return;
         }//end if
         current=head.getNext();
@@ -111,7 +117,7 @@ public class EventList {
     //-----------------------------------------------------------------------------------------------------
     
     
-    public void deletcontact(String name){//delet contact to all the events linked to deleted contact
+    public void deletcontact(String name){//delete contact to all the events linked to deleted contact
         current=head;
         Node <Event> previous=null;
         while(current!=null){
@@ -122,4 +128,4 @@ public class EventList {
         
 }//end EventList class
 
-    
+   
